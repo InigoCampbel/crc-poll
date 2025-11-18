@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel - Enhanced</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: Arial, sans-serif; 
+      padding: 20px; 
+      max-width: 1000px; 
+      margin: 0 auto;
+      background: #f5f5f5;
+    }
+    h2, h3 { color: #333; margin-bottom: 15px; }
+    .box { 
+      background: white; 
+      padding: 20px; 
+      border-radius: 8px; 
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    input, select { 
+      width: 100%; 
+      padding: 10px; 
+      margin: 10px 0; 
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    button { 
+      padding: 12px 24px; 
+      margin: 5px 5px 5px 0; 
+      background: #28a745; 
+      color: white; 
+      border: none; 
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover { background: #218838; }
+    button:disabled { 
+      background: #ccc; 
+      cursor: not-allowed; 
+    }
+    button.primary { background: #007bff; }
+    button.primary:hover { background: #0056b3; }
+    button.danger { background: #dc3545; }
+    button.danger:hover { background: #c82333; }
+    button.warning { background: #ffc107; color: #000; }
+    button.warning:hover { background: #e0a800; }
+    .hidden { display: none; }
+    
+    .progress-indicator {
+      background: #e7f3ff;
+      padding: 15px;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: #0056b3;
+      margin-bottom: 20px;
+    }
+    
+    .question-display {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 6px;
+      margin: 15px 0;
+      border-left: 4px solid #007bff;
+    }
+    
+    .question-display h3 {
+      color: #495057;
+      margin-bottom: 15px;
+    }
+    
+    .options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 15px;
+    }
+    
+    .option-box {
+      background: white;
+      padding: 15px;
+      border-radius: 6px;
+      border: 2px solid #ddd;
+      text-align: center;
+      font-weight: bold;
+    }
+    
+    .response-counter {
+      background: #fff3cd;
+      padding: 15px;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 18px;
+      margin: 15px 0;
+      border: 2px solid #ffc107;
+    }
+    
+    .bar-graph {
+      margin: 20px 0;
+    }
+    
+    .bar-item {
+      margin: 15px 0;
+    }
+    
+    .bar-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    .bar-container {
+      background: #e9ecef;
+      border-radius: 10px;
+      height: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .bar-fill {
+      height: 100%;
+      transition: width 0.5s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+    
+    .bar-fill.option-a { background: #007bff; }
+    .bar-fill.option-b { background: #28a745; }
+    
+    .message {
+      padding: 15px;
+      border-radius: 6px;
+      margin: 15px 0;
+      font-weight: bold;
+      text-align: center;
+    }
+    
+    .message.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .message.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    .message.loading {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+    
+    .overall-summary {
+      background: #e7f3ff;
+      padding: 30px;
+      border-radius: 8px;
+      border: 3px solid #007bff;
+    }
+    
+    .overall-summary h2 {
+      color: #0056b3;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    
+    .header-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .modal.show {
+      display: flex;
+    }
+    
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      max-width: 500px;
+      text-align: center;
+    }
+    
+    .modal-content h3 {
+      margin-bottom: 20px;
+      color: #dc3545;
+    }
+    
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="loginBox" class="box">
+  <h2>Admin Login</h2>
+  <label>Enter Admin Code:</label>
+  <input type="password" id="code" onkeypress="if(event.key==='Enter') checkCode()" />
+  <button onclick="checkCode()">Login</button>
+  <div id="loginMessage"></div>
+</div>
+
+<div id="panel" class="hidden">
+  <div class="header-actions">
+    <h2>📊 Admin Control Panel</h2>
+    <button onclick="logout()" class="danger">Logout</button>
+  </div>
+
+  <div id="messageBox"></div>
+
+  <div id="pollView" class="hidden">
+  <!-- START POLL BUTTON MOVED HERE -->
+  <div class="action-buttons" style="margin-bottom: 20px;">
+    <button id="startBtn" onclick="startCurrentPoll()" class="primary">▶ Start Poll</button>
+    <button id="nextBtn" onclick="confirmNextQuestion()" class="hidden">Next Question →</button>
+    <button id="endBtn" onclick="endPollSession()" class="hidden danger">End Poll Session</button>
+  </div>
+  
+  <div class="progress-indicator">
+      Question <span id="currentQNum">1</span>/<span id="totalQNum">0</span>
+    </div>
+
+    <div class="box question-display">
+      <h3 id="questionText">Loading question...</h3>
+      <div class="options">
+        <div class="option-box">
+          <div>Option A</div>
+          <div id="optionAText" style="margin-top: 10px; color: #666;"></div>
+        </div>
+        <div class="option-box">
+          <div>Option B</div>
+          <div id="optionBText" style="margin-top: 10px; color: #666;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="response-counter">
+      <span id="responseCount">0/0 students responded</span>
+    </div>
+
+    <div class="box">
+      <h3>Live Results</h3>
+      <div class="bar-graph">
+        <div class="bar-item">
+          <div class="bar-label">
+            <span>Option A</span>
+            <span><span id="countA">0</span> votes (<span id="percentA">0</span>%)</span>
+          </div>
+          <div class="bar-container">
+            <div class="bar-fill option-a" id="barA" style="width: 0%">
+              <span id="barTextA"></span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bar-item">
+          <div class="bar-label">
+            <span>Option B</span>
+            <span><span id="countB">0</span> votes (<span id="percentB">0</span>%)</span>
+          </div>
+          <div class="bar-container">
+            <div class="bar-fill option-b" id="barB" style="width: 0%">
+              <span id="barTextB"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="summaryView" class="hidden">
+    <div class="overall-summary">
+      <h2>📊 Overall Poll Summary</h2>
+      <p style="font-size: 18px; margin-bottom: 30px;">Total Responses Across All Questions</p>
+      
+      <div class="bar-graph">
+        <div class="bar-item">
+          <div class="bar-label">
+            <span>Option A</span>
+            <span><span id="summaryCountA">0</span> votes (<span id="summaryPercentA">0</span>%)</span>
+          </div>
+          <div class="bar-container">
+            <div class="bar-fill option-a" id="summaryBarA" style="width: 0%">
+              <span id="summaryBarTextA"></span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bar-item">
+          <div class="bar-label">
+            <span>Option B</span>
+            <span><span id="summaryCountB">0</span> votes (<span id="summaryPercentB">0</span>%)</span>
+          </div>
+          <div class="bar-container">
+            <div class="bar-fill option-b" id="summaryBarB" style="width: 0%">
+              <span id="summaryBarTextB"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p style="margin-top: 30px; font-size: 16px;">
+        Total Questions: <strong id="summaryTotalQ">0</strong> | 
+        Total Responses: <strong id="summaryTotalResp">0</strong>
+      </p>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>⚙️ Admin Actions</h3>
+    <div class="action-buttons">
+      <button onclick="confirmResetData()" class="warning">🔄 Reset All Data</button>
+      <button onclick="downloadCSV()" class="primary">📥 Download CSV</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div id="confirmModal" class="modal">
+  <div class="modal-content">
+    <h3 id="modalTitle">Confirm Action</h3>
+    <p id="modalMessage"></p>
+    <div class="modal-buttons">
+      <button onclick="closeModal()" class="primary">Cancel</button>
+      <button id="modalConfirmBtn" class="danger">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCGdG9BxGFE3G6hgejFZEHQ9L4z9bpdQK4",
+    authDomain: "poll-psgim.firebaseapp.com",
+    databaseURL: "https://poll-psgim-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "poll-psgim",
+    storageBucket: "poll-psgim.firebasestorage.app",
+    messagingSenderId: "460719942436",
+    appId: "1:460719942436:web:c83e5e76e679f3a3c721b1"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  let allQuestions = [];
+  let currentQuestionIndex = 0;
+  let totalStudents = 0;
+  let allResponses = [];
+
+  // Session persistence
+  function checkCode() {
+    showMessage("Checking credentials...", "loading");
+    let entered = document.getElementById("code").value;
+    if (entered === "ad123") {
+      localStorage.setItem("adminLoggedIn", "true");
+      showAdminPanel();
+    } else {
+      showMessage("Wrong code! Please try again.", "error", "loginMessage");
+    }
+  }
+
+  function showAdminPanel() {
+    document.getElementById("loginBox").classList.add("hidden");
+    document.getElementById("panel").classList.remove("hidden");
+    showMessage("Loading data...", "loading");
+    loadAllData();
+  }
+
+  function logout() {
+    localStorage.removeItem("adminLoggedIn");
+    localStorage.removeItem("currentQuestionIndex");
+    location.reload();
+  }
+
+  // Check if already logged in
+  window.onload = function() {
+    if (localStorage.getItem("adminLoggedIn") === "true") {
+      showAdminPanel();
+    }
+  };
+
+  function loadAllData() {
+    db.ref("questions").once("value", snap => {
+      const qs = snap.val();
+      allQuestions = [];
+      
+      for (let id in qs) {
+        if (id !== "null" && qs[id]) {
+          allQuestions.push({
+            id: Number(id),
+            text: qs[id].text,
+            optionA: qs[id].optionA,
+            optionB: qs[id].optionB
+          });
+        }
+      }
+      
+      allQuestions.sort((a, b) => a.id - b.id);
+      
+      // Restore saved position
+      const savedIndex = localStorage.getItem("currentQuestionIndex");
+      if (savedIndex) {
+        currentQuestionIndex = parseInt(savedIndex);
+      }
+      
+      document.getElementById("totalQNum").textContent = allQuestions.length;
+      
+      loadStudentCount();
+      displayCurrentQuestion();
+      watchCurrentQuestionStats();
+      showMessage("Data loaded successfully!", "success");
+      setTimeout(() => clearMessage(), 2000);
+    }).catch(err => {
+      showMessage("Error loading questions: " + err.message, "error");
+    });
+  }
+
+  function loadStudentCount() {
+    db.ref("students").on("value", snap => {
+      const students = snap.val();
+      totalStudents = students ? Object.keys(students).length : 0;
+      updateResponseCounter();
+    });
+  }
+
+  function displayCurrentQuestion() {
+    if (currentQuestionIndex >= allQuestions.length) {
+      showSummary();
+      return;
+    }
+
+    const q = allQuestions[currentQuestionIndex];
+    document.getElementById("currentQNum").textContent = currentQuestionIndex + 1;
+    document.getElementById("questionText").textContent = q.text;
+    document.getElementById("optionAText").textContent = q.optionA;
+    document.getElementById("optionBText").textContent = q.optionB;
+    
+    document.getElementById("pollView").classList.remove("hidden");
+    document.getElementById("summaryView").classList.add("hidden");
+    
+    // Show appropriate button
+    document.getElementById("startBtn").classList.remove("hidden");
+    document.getElementById("nextBtn").classList.add("hidden");
+    document.getElementById("endBtn").classList.add("hidden");
+    
+    resetCurrentStats();
+  }
+
+  function startCurrentPoll() {
+    const q = allQuestions[currentQuestionIndex];
+    showMessage("Starting poll...", "loading");
+    
+    db.ref("activeQuestion").set({
+      status: "active",
+      qid: q.id,
+      startedAt: Date.now(),
+      respondedCount: 0
+    }).then(() => {
+      document.getElementById("startBtn").classList.add("hidden");
+      document.getElementById("nextBtn").classList.remove("hidden");
+      
+      if (currentQuestionIndex === allQuestions.length - 1) {
+        document.getElementById("endBtn").classList.remove("hidden");
+      }
+      
+      showMessage("Poll started successfully!", "success");
+      setTimeout(() => clearMessage(), 2000);
+    }).catch(err => {
+      showMessage("Error starting poll: " + err.message, "error");
+    });
+  }
+
+  function confirmNextQuestion() {
+    if (currentQuestionIndex === allQuestions.length - 1) {
+      return;
+    }
+    
+    showConfirmModal(
+      "Move to Next Question?",
+      "This will end the current poll and move to the next question. Continue?",
+      moveToNextQuestion
+    );
+  }
+
+  function moveToNextQuestion() {
+    closeModal();
+    showMessage("Moving to next question...", "loading");
+    
+    currentQuestionIndex++;
+    localStorage.setItem("currentQuestionIndex", currentQuestionIndex);
+    
+    if (currentQuestionIndex >= allQuestions.length) {
+      // If we've gone past the last question, show summary
+      db.ref("activeQuestion").set({
+        status: "waiting",
+        qid: 0,
+        startedAt: 0,
+        respondedCount: 0
+      }).then(() => {
+        showSummary();
+        showMessage("All questions completed!", "success");
+        setTimeout(() => clearMessage(), 2000);
+      });
+    } else {
+      // Move to next question and auto-start it
+      const nextQ = allQuestions[currentQuestionIndex];
+      db.ref("activeQuestion").set({
+        status: "active",
+        qid: nextQ.id,
+        startedAt: Date.now(),
+        respondedCount: 0
+      }).then(() => {
+        displayCurrentQuestion();
+        
+        // Update button states for next question
+        document.getElementById("startBtn").classList.add("hidden");
+        document.getElementById("nextBtn").classList.remove("hidden");
+        
+        if (currentQuestionIndex === allQuestions.length - 1) {
+          document.getElementById("endBtn").classList.remove("hidden");
+        }
+        
+        showMessage("Moved to next question!", "success");
+        setTimeout(() => clearMessage(), 2000);
+      }).catch(err => {
+        showMessage("Error moving to next question: " + err.message, "error");
+      });
+    }
+  }
+
+  function endPollSession() {
+    showConfirmModal(
+      "End Poll Session?",
+      "This will end the current poll and show the overall summary. Continue?",
+      () => {
+        closeModal();
+        showMessage("Ending poll session...", "loading");
+        
+        db.ref("activeQuestion").set({
+          status: "waiting",
+          qid: 0,
+          startedAt: 0,
+          respondedCount: 0
+        }).then(() => {
+          showSummary();
+          showMessage("Poll session ended!", "success");
+          setTimeout(() => clearMessage(), 2000);
+        }).catch(err => {
+          showMessage("Error ending poll: " + err.message, "error");
+        });
+      }
+    );
+  }
+
+  function showSummary() {
+    document.getElementById("pollView").classList.add("hidden");
+    document.getElementById("summaryView").classList.remove("hidden");
+    
+    calculateOverallSummary();
+  }
+
+  function calculateOverallSummary() {
+    db.ref("stats").once("value", snap => {
+      const stats = snap.val();
+      let totalA = 0;
+      let totalB = 0;
+      let totalResponses = 0;
+      
+      if (stats) {
+        for (let qid in stats) {
+          const countA = stats[qid].A || 0;
+          const countB = stats[qid].B || 0;
+          totalA += countA;
+          totalB += countB;
+        }
+      }
+      
+      totalResponses = totalA + totalB;
+      const percentA = totalResponses > 0 ? ((totalA / totalResponses) * 100).toFixed(1) : 0;
+      const percentB = totalResponses > 0 ? ((totalB / totalResponses) * 100).toFixed(1) : 0;
+      
+      document.getElementById("summaryCountA").textContent = totalA;
+      document.getElementById("summaryCountB").textContent = totalB;
+      document.getElementById("summaryPercentA").textContent = percentA;
+      document.getElementById("summaryPercentB").textContent = percentB;
+      document.getElementById("summaryTotalQ").textContent = allQuestions.length;
+      document.getElementById("summaryTotalResp").textContent = totalResponses;
+      
+      document.getElementById("summaryBarA").style.width = percentA + "%";
+      document.getElementById("summaryBarB").style.width = percentB + "%";
+      document.getElementById("summaryBarTextA").textContent = percentA + "%";
+      document.getElementById("summaryBarTextB").textContent = percentB + "%";
+    });
+  }
+
+  function watchCurrentQuestionStats() {
+    db.ref("stats").on("value", snap => {
+      const stats = snap.val();
+      if (!stats || currentQuestionIndex >= allQuestions.length) return;
+      
+      const q = allQuestions[currentQuestionIndex];
+      const qStats = stats[q.id];
+      
+      if (qStats) {
+        const countA = qStats.A || 0;
+        const countB = qStats.B || 0;
+        const total = countA + countB;
+        
+        const percentA = total > 0 ? ((countA / total) * 100).toFixed(1) : 0;
+        const percentB = total > 0 ? ((countB / total) * 100).toFixed(1) : 0;
+        
+        document.getElementById("countA").textContent = countA;
+        document.getElementById("countB").textContent = countB;
+        document.getElementById("percentA").textContent = percentA;
+        document.getElementById("percentB").textContent = percentB;
+        
+        document.getElementById("barA").style.width = percentA + "%";
+        document.getElementById("barB").style.width = percentB + "%";
+        document.getElementById("barTextA").textContent = percentA > 10 ? percentA + "%" : "";
+        document.getElementById("barTextB").textContent = percentB > 10 ? percentB + "%" : "";
+      }
+    });
+    
+    db.ref("activeQuestion/respondedCount").on("value", snap => {
+      updateResponseCounter();
+    });
+  }
+
+  function updateResponseCounter() {
+    db.ref("activeQuestion/respondedCount").once("value", snap => {
+      const responded = snap.val() || 0;
+      document.getElementById("responseCount").textContent = 
+        `${responded}/${totalStudents} students responded`;
+    });
+  }
+
+  function resetCurrentStats() {
+    document.getElementById("countA").textContent = "0";
+    document.getElementById("countB").textContent = "0";
+    document.getElementById("percentA").textContent = "0";
+    document.getElementById("percentB").textContent = "0";
+    document.getElementById("barA").style.width = "0%";
+    document.getElementById("barB").style.width = "0%";
+    document.getElementById("responseCount").textContent = `0/${totalStudents} students responded`;
+  }
+
+  function confirmResetData() {
+    showConfirmModal(
+      "Reset All Data?",
+      "This will delete all student responses and reset statistics. This action cannot be undone!",
+      resetAllData
+    );
+  }
+
+  function resetAllData() {
+  closeModal();
+  showMessage("Resetting all data...", "loading");
+  
+  db.ref("students").once("value", snap => {
+    const students = snap.val();
+    const deletePromises = [];
+    
+    // Delete each student's responses
+    if (students) {
+      for (let studentId in students) {
+        deletePromises.push(db.ref(`responses/${studentId}`).remove());
+        // DELETE ENTIRE STUDENT NODE (removes login credentials)
+        deletePromises.push(db.ref(`students/${studentId}`).remove());
+      }
+    }
+    
+    // Delete stats and reset activeQuestion
+    deletePromises.push(db.ref("stats").remove());
+    deletePromises.push(db.ref("overallStats").remove());
+    deletePromises.push(db.ref("activeQuestion").set({
+      status: "waiting",
+      qid: 0,
+      startedAt: 0,
+      respondedCount: 0
+    }));
+    
+    Promise.all(deletePromises).then(() => {
+      currentQuestionIndex = 0;
+      localStorage.setItem("currentQuestionIndex", "0");
+      displayCurrentQuestion();
+      showMessage("All data and student logins reset successfully!", "success");
+      setTimeout(() => clearMessage(), 3000);
+    }).catch(err => {
+      showMessage("Error resetting data: " + err.message, "error");
+    });
+  }).catch(err => {
+    showMessage("Error reading students: " + err.message, "error");
+  });
+}
+
+
+function downloadCSV() {
+  showMessage("Preparing CSV download...", "loading");
+  
+  db.ref("responses").once("value", snap => {
+    const responses = snap.val();
+    
+    if (!responses) {
+      showMessage("No response data to download!", "error");
+      setTimeout(() => clearMessage(), 3000);
+      return;
+    }
+    
+    let csvContent = "Student ID,Question Number,Response,Timestamp\n";
+    
+    for (let studentId in responses) {
+      const studentResponses = responses[studentId];
+      
+      // Handle both array and object formats
+      if (Array.isArray(studentResponses)) {
+        // Array format: [null, { answer: "A", timestamp: 123 }, ...]
+        studentResponses.forEach((response, index) => {
+          if (response && index > 0) { // Skip null at index 0
+            // Check if response is an object with answer property
+            if (typeof response === 'object' && response.answer) {
+              const timestamp = response.timestamp ? new Date(response.timestamp).toLocaleString() : "N/A";
+              csvContent += `${studentId},${index},${response.answer},${timestamp}\n`;
+            } else if (typeof response === 'string') {
+              // Simple string format: "A" or "B"
+              csvContent += `${studentId},${index},${response},N/A\n`;
+            }
+          }
+        });
+      } else if (typeof studentResponses === 'object') {
+        // Object format: { "1": "A", "2": "B", ... } or { "1": { answer: "A", timestamp: 123 } }
+        for (let qid in studentResponses) {
+          const response = studentResponses[qid];
+          
+          if (typeof response === 'string') {
+            // Simple string format: "A" or "B"
+            csvContent += `${studentId},${qid},${response},N/A\n`;
+          } else if (typeof response === 'object' && response.answer) {
+            // Object format with answer and timestamp
+            const timestamp = response.timestamp ? new Date(response.timestamp).toLocaleString() : "N/A";
+            csvContent += `${studentId},${qid},${response.answer},${timestamp}\n`;
+          }
+        }
+      }
+    }
+    
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `poll_results_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    
+    showMessage("CSV downloaded successfully!", "success");
+    setTimeout(() => clearMessage(), 3000);
+  }).catch(err => {
+    showMessage("Error downloading CSV: " + err.message, "error");
+  });
+}
+
+
+  function showMessage(msg, type, elementId = "messageBox") {
+    const msgBox = document.getElementById(elementId);
+    msgBox.innerHTML = `<div class="message ${type}">${msg}</div>`;
+  }
+
+  function clearMessage(elementId = "messageBox") {
+    document.getElementById(elementId).innerHTML = "";
+  }
+
+  function showConfirmModal(title, message, onConfirm) {
+    document.getElementById("modalTitle").textContent = title;
+    document.getElementById("modalMessage").textContent = message;
+    document.getElementById("confirmModal").classList.add("show");
+    
+    document.getElementById("modalConfirmBtn").onclick = onConfirm;
+  }
+
+  function closeModal() {
+    document.getElementById("confirmModal").classList.remove("show");
+  }
+</script>
+
+</body>
+</html>

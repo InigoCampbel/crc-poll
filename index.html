@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Poll - PSG College</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    :root {
+      --primary-color: #1e3a8a;
+      --secondary-color: #3b82f6;
+      --accent-color: #60a5fa;
+      --hover-color: #1e40af;
+      --success-color: #10b981;
+      --background-color: #f8fafc;
+      --text-color: #1f2937;
+      --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      --card-hover-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: var(--text-color);
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    .page-container {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 15px;
+      position: relative;
+      background-color: white;
+    }
+    
+  
+    
+    /* College Header */
+    .college-header {
+      text-align: center;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .college-header h1 {
+      color: rgb(23, 5, 129);
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+    
+    .college-header p {
+      color: rgba(6, 14, 121, 0.9);
+      font-size: 1rem;
+      font-weight: 400;
+    }
+    
+    /* Main Container */
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      box-shadow: var(--card-shadow);
+      padding: 16px;
+      position: relative;
+      max-width: 500px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    
+    .container h2 {
+      text-align: center;
+      color: var(--primary-color);
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      position: relative;
+      padding-bottom: 15px;
+    }
+    
+    .container h2::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      border-radius: 10px;
+    }
+    
+    /* Header User Info */
+    #header {
+      background: linear-gradient(135deg, #e0e7ff, #dbeafe);
+      padding: 18px 20px;
+      border-radius: 16px;
+      margin: 20px 0;
+      box-shadow: 0 4px 12px rgba(30, 58, 138, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+    
+    #userName {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    #userName::before {
+      content: "\f007";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      color: var(--secondary-color);
+    }
+    
+    #header button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(30, 58, 138, 0.25);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: 40%;
+    }
+    
+    #header button:active {
+      transform: scale(0.95);
+    }
+    
+    /* Box Styles */
+    .box {
+      background: white;
+      padding: 16px;
+      border-radius: 18px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      margin: 20px 0;
+      border: 1px solid rgba(234, 234, 234, 0.5);
+    }
+    
+    /* Hidden Class */
+    .hidden {
+      display: none !important;
+    }
+    
+    /* Login Box */
+    #loginBox {
+      background: white;
+      margin-top: 0;
+    }
+    
+    #loginBox label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--primary-color);
+      font-size: 0.9rem;
+      margin-top: 18px;
+    }
+    
+    #loginBox label:first-of-type {
+      margin-top: 0;
+    }
+    
+    #loginBox input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      background: #f9fafb;
+      color: var(--text-color);
+    }
+    
+    #loginBox input:focus {
+      outline: none;
+      border-color: var(--secondary-color);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    #loginBox input::placeholder {
+      color: #9ca3af;
+    }
+    
+    /* Buttons */
+    button {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    button::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: all 0.6s ease;
+    }
+    
+    button:hover::before {
+      left: 100%;
+    }
+    
+    button.full-width {
+      background: var(--primary-color);
+      color: white;
+      margin-top: 24px;
+      box-shadow: 0 6px 20px rgba(30, 58, 138, 0.3);
+    }
+    
+    button.full-width:active {
+      transform: translateY(2px);
+      box-shadow: 0 3px 12px rgba(30, 58, 138, 0.3);
+    }
+    
+    /* Waiting Box */
+    #waiting h3 {
+      color: var(--primary-color);
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+      text-align: center;
+      font-weight: 600;
+    }
+    
+    #waiting > p {
+      color: #6b7280;
+      text-align: center;
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    
+    #waiting button {
+      background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+      color: white;
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+    }
+    
+    #waiting button:active {
+      transform: scale(0.98);
+    }
+    
+    /* Graph Container */
+    #graphContainer {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      padding: 24px 20px;
+      border-radius: 16px;
+      margin: 24px 0;
+      border: 1px solid rgba(59, 130, 246, 0.15);
+    }
+    
+    #graphContainer h4 {
+      color: var(--primary-color);
+      font-size: 1.05rem;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: 600;
+    }
+    
+    .graph-item {
+      margin-bottom: 20px;
+    }
+    
+    .graph-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .graph-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      color: #4b5563;
+      font-weight: 500;
+    }
+    
+    .graph-label strong {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+    
+    .graph-item svg {
+      border-radius: 10px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.7);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    
+    .graph-item svg rect {
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    #barA {
+      fill: var(--secondary-color);
+    }
+    
+    #barB {
+      fill: var(--success-color);
+    }
+    
+    /* Answer History */
+    #answerHistory {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 2px solid #e5e7eb;
+    }
+    
+    #answerHistory h4 {
+      color: var(--primary-color);
+      font-size: 1.05rem;
+      margin-bottom: 18px;
+      text-align: center;
+      font-weight: 600;
+    }
+    
+    #answerList {
+      max-height: 400px;
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+    
+    #answerList::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    #answerList::-webkit-scrollbar-track {
+      background: #f3f4f6;
+      border-radius: 10px;
+    }
+    
+    #answerList::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 10px;
+    }
+    
+    #answerList::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+    
+    .answer-item {
+      background: white;
+      padding: 18px;
+      border-radius: 14px;
+      margin-bottom: 12px;
+      border-left: 4px solid var(--secondary-color);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .answer-item:active {
+      transform: scale(0.98);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+    
+    .answer-question-number {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--secondary-color);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+    }
+    
+    .answer-question-text {
+      font-size: 0.9rem;
+      color: var(--text-color);
+      margin-bottom: 12px;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+    
+    .answer-response {
+      background: #f9fafb;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      border-left: 3px solid var(--secondary-color);
+      margin-top: 10px;
+    }
+    
+    .answer-response strong {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    
+    .loading {
+      text-align: center;
+      color: #9ca3af;
+      font-style: italic;
+      padding: 24px;
+      font-size: 0.9rem;
+    }
+    
+    /* Question Box */
+    #questionBox {
+      animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    #questionBox h3 {
+      color: var(--primary-color);
+      font-size: 1.2rem;
+      margin-bottom: 28px;
+      text-align: center;
+      line-height: 1.6;
+      font-weight: 600;
+    }
+    
+    #questionBox button {
+      min-height: 60px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 14px;
+      margin-top: 15px;
+    }
+    
+    #btnA {
+      background: var(--secondary-color);
+      color: white;
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.35);
+    }
+    
+    #btnA:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+    
+    #btnB {
+      background: var(--success-color);
+      color: white;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+    }
+    
+    #btnB:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+    
+    #questionBox button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+    
+    /* Announcements */
+    .announcements {
+      margin-top: 24px;
+      padding: 18px 20px;
+      background: rgba(240, 245, 255, 0.8);
+      border-radius: 14px;
+      border-left: 4px solid var(--accent-color);
+      border: 1px solid rgba(59, 130, 246, 0.15);
+    }
+    
+    .announcements h3 {
+      color: var(--primary-color);
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+    }
+    
+    .announcements p {
+      color: #4b5563;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-bottom: 6px;
+    }
+    
+    .announcements strong {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+    
+    /* Safe Area for Notched Phones */
+    @supports (padding: max(0px)) {
+      .page-container {
+        padding-left: max(15px, env(safe-area-inset-left));
+        padding-right: max(15px, env(safe-area-inset-right));
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-container">
+    <div class="college-header">
+      <h1>PSG Institute of Management</h1>
+      <p>Corporate Relations Center</p>
+    </div>
+    
+    <div class="container">
+      <h2>Student Poll</h2>
+      
+      <div id="header" class="hidden">
+        <div id="userName"></div>
+        <button onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+
+      <div id="loginBox" class="box">
+        <label for="name">Enter Your Name:</label>
+        <input type="text" id="name" placeholder="e.g., John Doe" />
+        
+        <label for="roll">Enter Your Roll Number:</label>
+        <input type="text" id="roll" placeholder="e.g., 2024001" />
+        
+        <button onclick="start()" class="full-width">
+          <i class="fas fa-arrow-right"></i> Start
+        </button>
+      </div>
+
+      <div id="waiting" class="box hidden">
+        <h3>Waiting for next question...</h3>
+        <p>The trainer will activate the next question shortly.</p>
+        
+        <div id="graphContainer" class="hidden">
+          <h4>Your Response Summary</h4>
+          
+          <div class="graph-item">
+            <div class="graph-label">
+              <span>Option A: <strong id="countA">0</strong> times</span>
+              <span>(<span id="percA">0</span>%)</span>
+            </div>
+            <svg width="100%" height="15">
+              <rect id="barA" x="0" y="0" height="15" fill="#3b82f6" />
+            </svg>
+          </div>
+          
+          <div class="graph-item">
+            <div class="graph-label">
+              <span>Option B: <strong id="countB">0</strong> times</span>
+              <span>(<span id="percB">0</span>%)</span>
+            </div>
+            <svg width="100%" height="15">
+              <rect id="barB" x="0" y="0" height="15" fill="#10b981" />
+            </svg>
+          </div>
+        </div>
+        
+        <button onclick="toggleAnswerHistory()">
+          <i class="fas fa-history"></i> View Your Answers
+        </button>
+        
+        <div id="answerHistory" class="hidden">
+          <h4>Your Answer History</h4>
+          <div id="answerList"></div>
+        </div>
+      </div>
+
+      <div id="questionBox" class="box hidden">
+        <h3 id="qText"></h3>
+        <button onclick="submitAnswer('A')" id="btnA"></button>
+        <button onclick="submitAnswer('B')" id="btnB"></button>
+      </div>
+      
+      <div class="announcements">
+        <h3><i class="fas fa-info-circle"></i> Instructions</h3>
+        <p>• Answer each poll question as it appears</p>
+        <p>• You can only answer each question <strong>once</strong></p>
+        <p>• View your answer history anytime while waiting</p>
+      </div>
+      
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCGdG9BxGFE3G6hgejFZEHQ9L4z9bpdQK4",
+      authDomain: "poll-psgim.firebaseapp.com",
+      databaseURL: "https://poll-psgim-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "poll-psgim",
+      storageBucket: "poll-psgim.firebasestorage.app",
+      messagingSenderId: "460719942436",
+      appId: "1:460719942436:web:c83e5e76e679f3a3c721b1"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let rollNumber = "";
+    let studentName = "";
+
+    window.onload = function() {
+      const savedRoll = localStorage.getItem("studentRoll");
+      const savedName = localStorage.getItem("studentName");
+      
+      if (savedRoll && savedName) {
+        rollNumber = savedRoll;
+        studentName = savedName;
+        
+        document.getElementById("loginBox").classList.add("hidden");
+        document.getElementById("header").classList.remove("hidden");
+        document.getElementById("userName").innerText = studentName;
+        
+        initializeStudent();
+        loadStudentSummary();
+        watchAdminControl();
+      }
+    };
+
+    function start() {
+      studentName = document.getElementById("name").value.trim();
+      rollNumber = document.getElementById("roll").value.trim();
+      
+      if (studentName === "" || rollNumber === "") {
+        alert("Please enter both name and roll number!");
+        return;
+      }
+
+      localStorage.setItem("studentName", studentName);
+      localStorage.setItem("studentRoll", rollNumber);
+
+      initializeStudent();
+      
+      document.getElementById("loginBox").classList.add("hidden");
+      document.getElementById("header").classList.remove("hidden");
+      document.getElementById("userName").innerText = studentName;
+      
+      loadStudentSummary();
+      watchAdminControl();
+    }
+
+    function logout() {
+      localStorage.removeItem("studentName");
+      localStorage.removeItem("studentRoll");
+      
+      rollNumber = "";
+      studentName = "";
+      
+      document.getElementById("header").classList.add("hidden");
+      document.getElementById("waiting").classList.add("hidden");
+      document.getElementById("questionBox").classList.add("hidden");
+      document.getElementById("graphContainer").classList.add("hidden");
+      document.getElementById("answerHistory").classList.add("hidden");
+      document.getElementById("loginBox").classList.remove("hidden");
+      
+      document.getElementById("name").value = "";
+      document.getElementById("roll").value = "";
+    }
+
+    function initializeStudent() {
+      const studentRef = db.ref("students/" + rollNumber);
+      
+      studentRef.once("value", snap => {
+        if (!snap.exists()) {
+          studentRef.set({
+            rollNumber: rollNumber,
+            totalAnswered: 0,
+            totalA: 0,
+            totalB: 0,
+            lastActive: Date.now()
+          });
+        } else {
+          studentRef.update({
+            lastActive: Date.now()
+          });
+        }
+      });
+    }
+
+    function watchAdminControl() {
+      db.ref("activeQuestion").on("value", snap => {
+        const data = snap.val();
+        if (!data) return;
+
+        if (data.status === "waiting") {
+          showWaiting();
+        } else if (data.status === "active") {
+          loadQuestion(data.qid);
+        }
+      });
+    }
+
+    function showWaiting() {
+      document.getElementById("waiting").classList.remove("hidden");
+      document.getElementById("questionBox").classList.add("hidden");
+    }
+
+    function loadQuestion(qid) {
+      db.ref("responses/" + rollNumber + "/" + qid).once("value", existingSnap => {
+        if (existingSnap.exists()) {
+          showWaiting();
+          return;
+        }
+
+        db.ref("questions/" + qid).once("value", snap => {
+          const q = snap.val();
+          if (!q) {
+            showWaiting();
+            return;
+          }
+
+          document.getElementById("graphContainer").classList.add("hidden");
+          
+          document.getElementById("waiting").classList.add("hidden");
+          document.getElementById("questionBox").classList.remove("hidden");
+
+          document.getElementById("qText").innerText = q.text;
+          document.getElementById("btnA").innerText = q.optionA;
+          document.getElementById("btnB").innerText = q.optionB;
+          document.getElementById("btnA").disabled = false;
+          document.getElementById("btnB").disabled = false;
+        });
+      });
+    }
+
+    function submitAnswer(option) {
+      document.getElementById("btnA").disabled = true;
+      document.getElementById("btnB").disabled = true;
+
+      const activeRef = db.ref("activeQuestion");
+      activeRef.once("value").then(snap => {
+        const data = snap.val();
+        if (!data) return;
+
+        const qid = data.qid;
+
+        db.ref("responses/" + rollNumber + "/" + qid).once("value", existingSnap => {
+          if (existingSnap.exists()) {
+            alert("You already answered this question!");
+            showWaiting();
+            return;
+          }
+
+          db.ref("responses/" + rollNumber + "/" + qid).set({
+            answer: option,
+            timestamp: Date.now()
+          });
+
+          db.ref("stats/" + qid + "/" + option).transaction(val => {
+            return (val || 0) + 1;
+          });
+
+          db.ref("overallStats/total" + option).transaction(val => {
+            return (val || 0) + 1;
+          });
+
+          db.ref("overallStats/totalResponses").transaction(val => {
+            return (val || 0) + 1;
+          });
+
+          const studentRef = db.ref("students/" + rollNumber);
+          studentRef.transaction(student => {
+            if (!student) {
+              student = { totalAnswered: 0, totalA: 0, totalB: 0 };
+            }
+            student.totalAnswered = (student.totalAnswered || 0) + 1;
+            if (option === "A") {
+              student.totalA = (student.totalA || 0) + 1;
+            } else {
+              student.totalB = (student.totalB || 0) + 1;
+            }
+            student.lastActive = Date.now();
+            return student;
+          });
+
+          db.ref("activeQuestion/respondedCount").transaction(val => {
+            return (val || 0) + 1;
+          });
+
+          loadStudentSummary();
+          showWaiting();
+        });
+      });
+    }
+
+    function loadStudentSummary() {
+  db.ref("students/" + rollNumber).on("value", snap => {
+    const student = snap.val();
+    if (!student) return;
+
+    const totalA = student.totalA || 0;
+    const totalB = student.totalB || 0;
+    const total = student.totalAnswered || 0;
+    
+    if (total > 0) {
+      document.getElementById("graphContainer").classList.remove("hidden");
+      
+      const percA = total > 0 ? Math.round((totalA / total) * 100) : 0;
+      const percB = total > 0 ? Math.round((totalB / total) * 100) : 0;
+      
+      document.getElementById("countA").innerText = totalA;
+      document.getElementById("countB").innerText = totalB;
+      document.getElementById("percA").innerText = percA;
+      document.getElementById("percB").innerText = percB;
+      
+      // Use setTimeout to ensure container is visible and has proper width
+      setTimeout(() => {
+        const container = document.getElementById("graphContainer");
+        const svgElements = container.querySelectorAll('svg');
+        
+        if (svgElements.length > 0) {
+          const svgWidth = svgElements[0].clientWidth;
+          const barWidth = svgWidth > 0 ? svgWidth : container.offsetWidth - 50;
+          
+          document.getElementById("barA").setAttribute("width", (percA / 100) * barWidth);
+          document.getElementById("barB").setAttribute("width", (percB / 100) * barWidth);
+        }
+      }, 150);
+    }
+  });
+}
+
+    function toggleAnswerHistory() {
+      const historyDiv = document.getElementById("answerHistory");
+      if (historyDiv.classList.contains("hidden")) {
+        loadAnswerHistory();
+        historyDiv.classList.remove("hidden");
+      } else {
+        historyDiv.classList.add("hidden");
+      }
+    }
+
+    function loadAnswerHistory() {
+      const answerList = document.getElementById("answerList");
+      answerList.innerHTML = "<p class='loading'>Loading...</p>";
+      
+      db.ref("responses/" + rollNumber).once("value", responsesSnap => {
+        if (!responsesSnap.exists()) {
+          answerList.innerHTML = "<p class='loading'>No answers yet.</p>";
+          return;
+        }
+        
+        const responses = responsesSnap.val();
+        const questionIds = Object.keys(responses);
+        
+        if (questionIds.length === 0) {
+          answerList.innerHTML = "<p class='loading'>No answers yet.</p>";
+          return;
+        }
+        
+        answerList.innerHTML = "";
+        let loadedCount = 0;
+        
+        questionIds.forEach((qid, index) => {
+          db.ref("questions/" + qid).once("value", qSnap => {
+            const question = qSnap.val();
+            const response = responses[qid];
+            const answer = typeof response === 'string' ? response : response.answer;
+            
+            if (question) {
+              const answerText = answer === "A" ? question.optionA : question.optionB;
+              
+              const answerDiv = document.createElement("div");
+              answerDiv.className = "answer-item";
+              answerDiv.style.borderLeftColor = answer === "A" ? "#3b82f6" : "#10b981";
+              
+              answerDiv.innerHTML = `
+                <div class="answer-question-number">Question ${index + 1}:</div>
+                <div class="answer-question-text">${question.text}</div>
+                <div class="answer-response" style="border-color: ${answer === "A" ? "#3b82f6" : "#10b981"};">
+                  <strong style="color: ${answer === "A" ? "#3b82f6" : "#10b981"};">Your Answer (${answer}):</strong> ${answerText}
+                </div>
+              `;
+              
+              answerList.appendChild(answerDiv);
+            }
+            
+            loadedCount++;
+            if (loadedCount === questionIds.length && answerList.children.length === 0) {
+              answerList.innerHTML = "<p class='loading'>Questions not found.</p>";
+            }
+          });
+        });
+      });
+    }
+  </script>
+</body>
+</html>
